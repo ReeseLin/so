@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lb.mapper.UserMapper">
+
+	<!--
+		添加一个联系人，返回生成唯一id
+	 public void insertUser(DateCollection dc)throws Exception; -->
+	 
+	<insert id="insertUser" parameterType="DateCollection">
+		INSERT INTO USER (username) VALUES  (#{user.username})
+		<selectKey keyProperty="user.userid" order="AFTER" resultType="Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+
+</mapper>
