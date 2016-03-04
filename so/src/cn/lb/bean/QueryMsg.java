@@ -1,4 +1,4 @@
-/*package cn.utils;
+package cn.lb.bean;
 
 import java.util.Date;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class QueryMsg {
 
-	//这里type有两种类型   1,request   2,response
+	// 这里type有两种类型 1,request 2,response
 	private String Type;
 	private String MethodName;
 	private String Result;
@@ -85,4 +85,3 @@ public class QueryMsg {
 	}
 
 }
-*/

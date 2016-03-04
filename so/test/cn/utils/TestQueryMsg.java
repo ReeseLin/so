@@ -1,10 +1,15 @@
 package cn.utils;
+/*package cn.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.dom4j.Node;
 import org.junit.Test;
 
@@ -13,7 +18,7 @@ public class TestAll {
 	private String postMsg = "<?xml version='1.0' encoding='UTF-8' ?>"
 			+ "<DocumentElement>" + "<MethodName>GetUserID</MethodName>"
 			+ "<AccessKey>123123123123</AccessKey>" + "<DataTable>"
-			+ "<username>admin</username>" + "</DataTable>"
+			+ "<username>admin</username><userid>123154</userid>" + "</DataTable>"
 			+ "</DocumentElement>";
 
 	@Test
@@ -25,9 +30,19 @@ public class TestAll {
 		// 得到编码
 		System.out.println(document.getXMLEncoding());
 
-		Node node = document.selectSingleNode("//DocumentElement/a");
-		System.out.println("======" + node.getName() + "++++" + node.getText());
+		Node node = document.selectSingleNode("//DocumentElement/MethodName");
+		System.out.println("title=" + node.getName() + "/data="
+				+ node.getText());
 
+		Element node1 = (Element) document
+				.selectSingleNode("//DocumentElement/DataTable");
+
+		System.out.println("title=" + node1.getName() + "/data="
+				+ node1.getText());
+		for (Iterator i = node1.elementIterator(); i.hasNext();) {
+			Element element = (Element) i.next();
+			System.out.println(element.getName() + "////" + element.getText());
+		}
 	}
 
 	@Test
@@ -47,7 +62,7 @@ public class TestAll {
 	private void getElementsDate(QueryMsg queryMsg, Document document) {
 		// 设置编码
 		queryMsg.setEncoding(document.getXMLEncoding());
-		
+
 		try {
 			Node MethodName = document
 					.selectSingleNode("//DocumentElement/MethodName");
@@ -57,7 +72,7 @@ public class TestAll {
 		try {
 			Node DataTable = document
 					.selectSingleNode("//DocumentElement/DataTable");
-			List<Map<Object,Object>> lm= getDateTableMsg(DataTable.getText());
+			List<Map<Object, Object>> lm = getDateTableMsg((Element) DataTable);
 			queryMsg.setDataTable(lm);
 		} catch (Exception e) {
 		}
@@ -79,10 +94,16 @@ public class TestAll {
 		}
 	}
 
-	private List<Map<Object, Object>> getDateTableMsg(String text) {
-		
-		System.out.println(text);
-		return null;
+	private List<Map<Object, Object>> getDateTableMsg(Element dateTableNode) {
+		List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		for (Iterator i = dateTableNode.elementIterator(); i.hasNext();) {
+			Element element = (Element) i.next();
+			map.put(element.getName(), element.getText());
+		}
+		list.add(map);
+		return list;
 	}
 
 }
+*/

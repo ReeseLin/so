@@ -1,13 +1,14 @@
 package cn.lb.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import cn.lb.bean.QueryMsg;
 
-import cn.lb.bean.DateCollection;
+public class MainService {
 
-
-public interface MainService {
+	public String getServiceName(){
+		return this.getClass().getName();
+	}
 	
-	
-	@Transactional
-	public void insertUser(DateCollection dc) throws Exception;
+	public QueryMsg execute(QueryMsg queryMsg){
+		return null;
+	}
 }
