@@ -13,17 +13,35 @@ import org.dom4j.Node;
 
 import cn.lb.bean.QueryMsg;
 
+/**
+ * 把指定格式xml解析为QueryMsg包装类的工具类
+ * 
+ * @author lin
+ * 
+ */
 public class QueryUtils {
-	
-	
-	public static QueryMsg parseXmlStringToQueryMsg(String xmlString) throws Exception {
+
+	/**
+	 * 将xml解析成QueryMsg
+	 * @param xmlString
+	 * @return
+	 * @throws Exception
+	 */
+	public static QueryMsg parseXmlStringToQueryMsg(String xmlString)
+			throws Exception {
 
 		QueryMsg queryMsg = new QueryMsg();
 		Document document = DocumentHelper.parseText(xmlString);
 		getElementsDate(queryMsg, document);
 		return queryMsg;
 	}
-	
+
+	/**
+	 * 解析标签使用的是dom4j的技术
+	 * 写的有点烂 TODO 看看是否可以优化
+	 * @param queryMsg
+	 * @param document
+	 */
 	private static void getElementsDate(QueryMsg queryMsg, Document document) {
 		// 设置编码
 		queryMsg.setEncoding(document.getXMLEncoding());
@@ -60,7 +78,8 @@ public class QueryUtils {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static List<Map<Object, Object>> getDateTableMsg(Element dateTableNode) {
+	private static List<Map<Object, Object>> getDateTableMsg(
+			Element dateTableNode) {
 		List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		for (Iterator i = dateTableNode.elementIterator(); i.hasNext();) {

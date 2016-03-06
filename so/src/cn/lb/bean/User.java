@@ -1,5 +1,10 @@
 package cn.lb.bean;
 
+/**
+ * 用户类和数据库表一致
+ * @author lin
+ *
+ */
 public class User {
 	
 	private int userid;

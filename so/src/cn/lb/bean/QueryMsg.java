@@ -4,6 +4,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * post请求数据包装类
+ * 使用QueryUtils可以把指定格式的xml装换为QueryMsg
+ * @author lin
+ *
+ */
 public class QueryMsg {
 
 	// 这里type有两种类型 1,request 2,response
