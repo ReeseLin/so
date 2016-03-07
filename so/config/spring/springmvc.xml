@@ -13,6 +13,9 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
 
+
+	<!-- 啦啦我是买报的小画家 -->
+	
 	<!-- 可以扫描controller、service、...
 	这里让扫描controller，指定controller的包
 	 -->

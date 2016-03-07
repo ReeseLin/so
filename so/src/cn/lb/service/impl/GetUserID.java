@@ -29,6 +29,7 @@ public class GetUserID extends MainService {
 		sqlQueryMsg.setParameters(parameters);
 		List<Map<String, Object>> list =DBUtils.executeSQL(sqlQueryMsg);
 		
+		System.out.println(list);
 		return null;
 	}
 
