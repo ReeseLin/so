@@ -14,10 +14,14 @@ import org.dom4j.Node;
 import cn.lb.bean.QueryMsg;
 
 /**
- * 把指定格式xml解析为QueryMsg包装类的工具类
  * 
- * @author lin
- * 
+ * The name: 把指定格式xml解析为QueryMsg包装类的工具类
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public class QueryUtils {
 

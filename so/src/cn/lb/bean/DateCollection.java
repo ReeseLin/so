@@ -1,10 +1,14 @@
 package cn.lb.bean;
 
 /**
- * 数据包装类
  * 
- * @author lin
- * 
+ * The name: 数据包装类
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public class DateCollection {
 	private User user;

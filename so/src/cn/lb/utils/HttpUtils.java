@@ -3,8 +3,13 @@ package cn.lb.utils;
 import java.io.InputStream;
 
 /**
- * 网络工具类
- * @author lin
+ * 
+ * The name: 网络工具类
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class HttpUtils {

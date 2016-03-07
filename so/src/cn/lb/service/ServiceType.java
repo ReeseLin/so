@@ -5,9 +5,13 @@ import cn.lb.service.impl.CreateChatRoom;
 
 /**
  * 服务类型，把新创建的服务在这里注册
- * 
- * @author lin
- * 
+ * The name: 
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public enum ServiceType {
 

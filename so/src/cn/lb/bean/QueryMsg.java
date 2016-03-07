@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * post请求数据包装类
- * 使用QueryUtils可以把指定格式的xml装换为QueryMsg
- * @author lin
+ * 
+ * The name: post请求数据包装类
+ * What to do: 与QueryUtils结合使用可以把指定格式的xml装换为QueryMsg
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class QueryMsg {

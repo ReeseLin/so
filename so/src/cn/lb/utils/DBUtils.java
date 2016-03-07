@@ -25,22 +25,26 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import cn.lb.bean.SQLQueryMsg;
 
 /**
- * 数据库工具类
- * 负责执行sql并返回一个list<map>集合
- * @author lin
+ * 
+ * The name: 数据库工具类 负责执行sql并返回一个list<map>集合
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class DBUtils {
 
-	//日志记录的一个类，TODO 看看是否要替换成自己的日志记录类
+	// 日志记录的一个类，TODO 看看是否要替换成自己的日志记录类
 	static final Log log = LogFactory.getLog(DBUtils.class);
-	
 	private static Map<Integer, String> paramsMap = new HashMap<Integer, String>();
 	private static DataSource dbSource;
 	private final static String DATASOURCE = "dataSource";
+	private final static String REGEX = "(:(\\w+))";
 
-	//这个步骤好像是在springmvc框架中得到DataSource
-	//TODO 但是具体的是否还是有连接池管理还有待验证
+	// 这个步骤好像是在springmvc框架中得到DataSource
+	// TODO 但是具体的是否还是有连接池管理还有待验证
 	static {
 		WebApplicationContext webApplicationContext = ContextLoader
 				.getCurrentWebApplicationContext();
@@ -49,25 +53,49 @@ public class DBUtils {
 		WebApplicationContext wac = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(servletContext);
 		dbSource = (DataSource) wac.getBean(DATASOURCE); // 配置文件里的beanid
-
 	}
 
+	private static void closePS(SQLQueryMsg sqlQueryMsg) throws SQLException {
+		sqlQueryMsg.getPs().close();
+		if (sqlQueryMsg.getSubsqlQueryMsg() != null) {
+			closePS(sqlQueryMsg.getSubsqlQueryMsg());
+		}
+	}
 
 	/**
-	 * 执行sql的主要函数
-	 * @param sqlQueryMsg包装类
-	 * @return
-	 * @throws Exception
+	 * 执行单一prepareStatement的一个方法(如果传入的请求类中子类存在则开始迭代执行)
+	 * 
+	 * @param sqlQueryMsg
+	 * @param conn
+	 * @throws SQLException
 	 */
-	public static List<Map<String, Object>> executeSQL(SQLQueryMsg sqlQueryMsg)
-			throws Exception {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		Connection conn = dbSource.getConnection();
+	private static void executePS(SQLQueryMsg sqlQueryMsg, Connection conn)
+			throws SQLException {
+		PreparedStatement ps;
 		String sql = parseSql(sqlQueryMsg.getSql());
-		PreparedStatement ps = conn.prepareStatement(sql);
+		ps = conn.prepareStatement(sql);
+		// 回填prepareStatement
+		sqlQueryMsg.setPs(ps);
+		// 填充参数
 		fillParameters(ps, sqlQueryMsg.getParameters());
 		ps.execute();
-		ResultSet rs = ps.getResultSet();
+		// 回填参数
+		sqlQueryMsg.setResultMsg(ResultSetToList(ps.getResultSet()));
+		if (sqlQueryMsg.getSubsqlQueryMsg() != null) {
+			executePS(sqlQueryMsg.getSubsqlQueryMsg(), conn);
+		}
+	}
+
+	/**
+	 * 把ResultSet转换为list
+	 * 
+	 * @param ps
+	 * @return
+	 * @throws SQLException
+	 */
+	private static List<Map<String, Object>> ResultSetToList(ResultSet rs)
+			throws SQLException {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if (rs != null) {
 			while (rs.next()) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -83,13 +111,37 @@ public class DBUtils {
 	}
 
 	/**
-	 * 把传入的SQL解析成PreparedStatement可以接受的SQL
-	 * 并记录下坐标和名字可以为后面赋值的时候使用ps.setObject()
+	 * 执行sql的方法，传入可为多个请求
+	 * 
+	 * @param sqlQueryMsg包装类
+	 * @return
+	 * @throws Exception
+	 */
+	public static void executeSQL(SQLQueryMsg sqlQueryMsg) throws Exception {
+		Connection conn = null;
+		try {
+			conn = dbSource.getConnection();
+			// 设置不自动提交
+			conn.setAutoCommit(false);
+			executePS(sqlQueryMsg, conn);
+			conn.commit();
+		} catch (Exception e) {
+			log.debug("execute中出错：" + e.getMessage());
+			conn.rollback();
+		} finally {
+			closePS(sqlQueryMsg);
+			conn.close();
+		}
+	}
+
+	/**
+	 * 把传入的SQL解析成PreparedStatement可以接受的SQL 并记录下坐标和名字可以为后面赋值的时候使用ps.setObject()
+	 * 
 	 * @param sql
 	 * @return
 	 */
 	public static String parseSql(String sql) {
-		String regex = "(:(\\w+))";
+		String regex = REGEX;
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(sql);
 		emptyMap();
@@ -103,9 +155,9 @@ public class DBUtils {
 		return result;
 	}
 
-	
 	/**
 	 * 向PreparedStatement中填入数据
+	 * 
 	 * @param ps
 	 * @param parameters
 	 * @return

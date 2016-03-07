@@ -3,8 +3,13 @@ package cn.lb.service.impl;
 import cn.lb.bean.QueryMsg;
 import cn.lb.service.MainService;
 /**
- * 创建聊天室service
- * @author lin
+ * 
+ * The name: 创建聊天室service
+ * What to do: 
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class CreateChatRoom extends MainService {

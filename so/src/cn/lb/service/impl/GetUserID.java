@@ -11,25 +11,44 @@ import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
 import cn.lb.utils.DBUtils;
 /**
- * 根据一个传入的用户名得到一个唯一id并返回
- * @author lin
+ * 
+ * The name: 新建一个用户
+ * What to do: 根据一个传入的用户名得到一个唯一id并返回
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class GetUserID extends MainService {
 
-
+	
+	public static final String INSERTUSER=" INSERT INTO USER (username) VALUES  (:username);" ;
+	
+	public static final String GETID=" SELECT LAST_INSERT_ID() as userid;";
+	
+	
 	@Override
 	@Transactional
 	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
-		SQLQueryMsg sqlQueryMsg =new SQLQueryMsg();
-		String sql="SELECT * FROM USER where username = :username";
-		Map<String,Object> parameters = new HashMap<String,Object>();
-		parameters.put("username", "lin");
-		sqlQueryMsg.setSql(sql);
-		sqlQueryMsg.setParameters(parameters);
-		List<Map<String, Object>> list =DBUtils.executeSQL(sqlQueryMsg);
+		//获取到请求内容的参数 TODO 获取参数这个地方感觉有点问题
+		List<Map<Object, Object>> list = queryMsg.getDataTable();
+		Map<Object, Object> map=list.get(0);
 		
-		System.out.println(list);
+		//插入user操作
+		SQLQueryMsg sqlQueryMsg =new SQLQueryMsg();
+		Map<String,Object> parameters = new HashMap<String,Object>();
+		parameters.put("username", map.get("username"));
+		sqlQueryMsg.setSql(INSERTUSER);
+		sqlQueryMsg.setParameters(parameters);
+
+		//查询插入user id操作
+		SQLQueryMsg subsqlQueryMsg =new SQLQueryMsg();
+		subsqlQueryMsg.setSql(GETID);
+		sqlQueryMsg.setSubsqlQueryMsg(subsqlQueryMsg);
+		
+		DBUtils.executeSQL(sqlQueryMsg);
+		
 		return null;
 	}
 

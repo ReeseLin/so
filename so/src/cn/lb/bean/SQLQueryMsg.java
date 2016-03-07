@@ -1,17 +1,61 @@
 package cn.lb.bean;
 
+import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Map;
+
 /**
- * sql请求包装类
- * sql语句有指定的格式,如"SELECT * FROM USER where username = :username"
- * parameters是传入参数值，如上的话传入的应该是  key=value username="xxxx"
- * @author lin
+ * 
+ * The name: sql请求包装类 
+ * What to do: 通过创建一个sql请求类可以执行一个sql操作
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
  *
  */
 public class SQLQueryMsg {
+
+	// sql语句
 	private String sql;
 
-	private Map<String,Object> parameters;
+	// 可以设置多重查询
+	private SQLQueryMsg subsqlQueryMsg;
+
+	// 返回的信息
+	private List<Map<String, Object>> resultMsg;
+
+	// 填充ps在后续可以关闭
+	PreparedStatement ps;
+
+	public PreparedStatement getPs() {
+		return ps;
+	}
+
+	public void setPs(PreparedStatement ps) {
+		this.ps = ps;
+	}
+
+	public List<Map<String, Object>> getResultMsg() {
+		return resultMsg;
+	}
+
+	public void setResultMsg(List<Map<String, Object>> resultMsg) {
+		this.resultMsg = resultMsg;
+	}
+
+
+	public SQLQueryMsg getSubsqlQueryMsg() {
+		return subsqlQueryMsg;
+	}
+
+	public void setSubsqlQueryMsg(SQLQueryMsg subsqlQueryMsg) {
+		this.subsqlQueryMsg = subsqlQueryMsg;
+	}
+
+
+
+	private Map<String, Object> parameters;
 
 	public String getSql() {
 		return sql;
@@ -28,6 +72,5 @@ public class SQLQueryMsg {
 	public void setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 	}
-	
-	
+
 }
