@@ -1,6 +1,10 @@
 package cn.lb.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
@@ -30,5 +34,17 @@ public class HttpUtils {
 			sb.append(msg);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 对外写数据
+	 * @param result
+	 * @param response
+	 * @throws IOException
+	 */
+	public static void writeOutMsg(String result, HttpServletResponse response) throws IOException {
+		// TODO 对外写数据
+		 PrintWriter out =response.getWriter();
+		 out.write(result);
 	}
 }

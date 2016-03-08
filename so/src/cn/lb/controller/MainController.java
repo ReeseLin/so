@@ -38,9 +38,13 @@ public class MainController {
 	 * 
 	 * @param resultMsg
 	 * @param response
+	 * @throws Exception
 	 */
-	private void responserMsg(QueryMsg resultMsg, HttpServletResponse response) {
+	private void responserMsg(QueryMsg resultMsg, HttpServletResponse response)
+			throws Exception {
 		// TODO 返回信息
+		String result = QueryUtils.parseQueryMsgToXmlString(resultMsg);
+		HttpUtils.writeOutMsg(result, response);
 	}
 
 }

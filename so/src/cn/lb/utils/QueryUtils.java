@@ -15,18 +15,18 @@ import cn.lb.bean.QueryMsg;
 
 /**
  * 
- * The name: 把指定格式xml解析为QueryMsg包装类的工具类
- * What to do: 
- *
- * @author ReeseLin 
- * @Email  172053362@qq.com
- *
- *
+ * The name: 把指定格式XML解析为QueryMsg包装类的工具类 What to do:
+ * 
+ * @author ReeseLin
+ * @Email 172053362@qq.com
+ * 
+ * 
  */
 public class QueryUtils {
 
 	/**
-	 * 将xml解析成QueryMsg
+	 * 将XML解析成QueryMsg
+	 * 
 	 * @param xmlString
 	 * @return
 	 * @throws Exception
@@ -41,8 +41,41 @@ public class QueryUtils {
 	}
 
 	/**
-	 * 解析标签使用的是dom4j的技术
-	 * 写的有点烂 TODO 看看是否可以优化
+	 * 将QueryMsg解析成XML
+	 * 
+	 * @param queryMsg
+	 * @return
+	 * @throws Exception
+	 */
+	public static String parseQueryMsgToXmlString(QueryMsg queryMsg)
+			throws Exception {
+		Document document = null;
+		if (queryMsg.isResponse()) {
+			document = DocumentHelper.createDocument();
+			document.setXMLEncoding(queryMsg.getEncoding());
+			Element root = document.addElement("DocumentElement");
+			root.addElement("Result").addText(queryMsg.getResult());
+			if("1".equals(queryMsg.getResult())){
+				root.addElement("Error").addText(queryMsg.getError());
+			}
+			if (queryMsg.getDataTable() != null) {
+				Element DataTable = root.addElement("DataTable");
+				Map<Object, Object> dataMap = queryMsg.getDataTable().get(0);
+				for (Map.Entry<Object, Object> entry : dataMap.entrySet()) {
+					DataTable.addElement(entry.getKey() + "").addText(
+							entry.getValue() + "");
+				}
+			}
+
+		} else {
+			// TODO 如果不是回应数据的话用另外的格式，现在暂时没用到
+		}
+		return document.asXML();
+	}
+
+	/**
+	 * 解析标签使用的是dom4j的技术 写的有点烂 TODO 看看是否可以优化
+	 * 
 	 * @param queryMsg
 	 * @param document
 	 */

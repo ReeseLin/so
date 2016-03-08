@@ -10,6 +10,7 @@ import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
 import cn.lb.utils.DBUtils;
+import cn.lb.utils.QueryUtils;
 /**
  * 
  * The name: 新建一个用户
@@ -49,7 +50,19 @@ public class GetUserID extends MainService {
 		
 		DBUtils.executeSQL(sqlQueryMsg);
 		
-		return null;
+		//得到返回user id
+		Map<String, Object> resultMap =subsqlQueryMsg.getResultMsg().get(0);
+		String userid=resultMap.get("userid")+"";
+		Map<Object, Object> resultdate = new HashMap<Object, Object>();
+		resultdate.put("userid", userid);
+		
+		QueryMsg resQueryMsg = new QueryMsg();
+		resQueryMsg.setResponse(true);
+		resQueryMsg.iniDateTable();
+		resQueryMsg.getDataTable().add(resultdate);
+		resQueryMsg.setResult("0");
+		
+		return resQueryMsg;
 	}
 
 }
