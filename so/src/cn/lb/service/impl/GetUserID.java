@@ -10,7 +10,6 @@ import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
 import cn.lb.utils.DBUtils;
-import cn.lb.utils.QueryUtils;
 /**
  * 
  * The name: 新建一个用户
@@ -24,10 +23,13 @@ import cn.lb.utils.QueryUtils;
 public class GetUserID extends MainService {
 
 	
-	public static final String INSERTUSER=" INSERT INTO USER (username) VALUES  (:username);" ;
+	public static final String SQL_INSERTUSER=" INSERT INTO USER (username) VALUES  (:username);" ;
 	
-	public static final String GETID=" SELECT LAST_INSERT_ID() as userid;";
+	public static final String SQL_GETID=" SELECT LAST_INSERT_ID() as userid;";
 	
+	public static final String USERNAME="username";
+	
+	public static final String USERID="userid";
 	
 	@Override
 	@Transactional
@@ -39,24 +41,24 @@ public class GetUserID extends MainService {
 		//插入user操作
 		SQLQueryMsg sqlQueryMsg =new SQLQueryMsg();
 		Map<String,Object> parameters = new HashMap<String,Object>();
-		parameters.put("username", map.get("username"));
-		sqlQueryMsg.setSql(INSERTUSER);
+		parameters.put(USERNAME, map.get(USERNAME));
+		sqlQueryMsg.setSql(SQL_INSERTUSER);
 		sqlQueryMsg.setParameters(parameters);
 
 		//查询插入user id操作
 		SQLQueryMsg subsqlQueryMsg =new SQLQueryMsg();
-		subsqlQueryMsg.setSql(GETID);
+		subsqlQueryMsg.setSql(SQL_GETID);
 		sqlQueryMsg.setSubsqlQueryMsg(subsqlQueryMsg);
 		
+		//执行
 		DBUtils.executeSQL(sqlQueryMsg);
 		
-		//得到返回user id
-		Map<String, Object> resultMap =subsqlQueryMsg.getResultMsg().get(0);
-		String userid=resultMap.get("userid")+"";
-		Map<Object, Object> resultdate = new HashMap<Object, Object>();
-		resultdate.put("userid", userid);
-		
+		//构建回应数据
 		QueryMsg resQueryMsg = new QueryMsg();
+		Map<String, Object> resultMap =subsqlQueryMsg.getResultMsg().get(0);
+		String userid=resultMap.get(USERID)+"";
+		Map<Object, Object> resultdate = new HashMap<Object, Object>();
+		resultdate.put(USERID, userid);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();
 		resQueryMsg.getDataTable().add(resultdate);
