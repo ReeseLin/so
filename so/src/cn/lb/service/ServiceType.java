@@ -2,6 +2,8 @@ package cn.lb.service;
 
 import cn.lb.service.impl.GetUserID;
 import cn.lb.service.impl.CreateChatRoom;
+import cn.lb.service.impl.CheckBeAgree;
+import cn.lb.service.impl.ApplyJoinChatRoom;
 
 /**
  * 服务类型，把新创建的服务在这里注册
@@ -16,7 +18,9 @@ import cn.lb.service.impl.CreateChatRoom;
 public enum ServiceType {
 
 	GetUserID(GetUserID.class), // 获得user id服务
-	CreateChatRoom(CreateChatRoom.class);// 创建聊天室服务
+	CreateChatRoom(CreateChatRoom.class),// 创建聊天室服务
+	ApplyJoinChatRoom(ApplyJoinChatRoom.class),// 申请加入聊天室服务
+	CheckBeAgree(CheckBeAgree.class);// 查询是否被同意加入聊天室
 
 	
 	
