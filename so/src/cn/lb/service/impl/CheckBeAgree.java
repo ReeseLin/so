@@ -23,7 +23,11 @@ import cn.lb.utils.DBUtils;
  */
 public class CheckBeAgree extends MainService {
 
-	public static final String SQL_CHECK_AGREE = " SELECT isagree FROM user_chat_room WHERE userid=:userid AND chatroomid=:chatroomid;";
+//	public static final String SQL_CHECK_AGREE = " SELECT isagree FROM user_chat_room WHERE userid=:userid AND chatroomid=:chatroomid;";
+	
+	public static final String SQL_CHECK_AGREE = " SELECT isagree FROM chat_room_member WHERE chatroomid=:chatroomid AND userid=:userid;";
+	
+	public static final String SQL_UPDATE_CHAT_ROOM = " UPDATE user_chat_room SET isagree='1' WHERE chatroomid=:chatroomid AND userid=:userid;";
 
 	@Override
 	@Transactional
@@ -46,10 +50,23 @@ public class CheckBeAgree extends MainService {
 		// 执行
 		DBUtils.executeSQL(sqlQueryMsg);
 
+		String isagree = (String) sqlQueryMsg.getResultMsg().get(0).get("isagree");
+		
+		//sqlQueryMsg.getResultMsg().get(0)).get("isagree")
+		//如果这个时候isagree等于1
+		//更新自己的user_chat_room表
+		if("1".equals(isagree)){
+			SQLQueryMsg UpdatesqlQueryMsg = new SQLQueryMsg();
+			UpdatesqlQueryMsg.setSql(SQL_UPDATE_CHAT_ROOM);
+			UpdatesqlQueryMsg.setParameters(parameters);
+			DBUtils.executeSQL(UpdatesqlQueryMsg);
+		}
+		
+		
 		// 构建回应数据
 		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
 		Map<String,Object> resultMap =new HashMap<String,Object>();
-		resultMap.put("isagree", (sqlQueryMsg.getResultMsg().get(0)).get("isagree"));
+		resultMap.put("isagree", isagree);
 		resultList.add(resultMap);
 		
 		QueryMsg resQueryMsg = new QueryMsg();

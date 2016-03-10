@@ -3,6 +3,7 @@ package cn.lb.service;
 import cn.lb.service.impl.GetUserID;
 import cn.lb.service.impl.CreateChatRoom;
 import cn.lb.service.impl.CheckBeAgree;
+import cn.lb.service.impl.AgreeUserJoin;
 import cn.lb.service.impl.ApplyJoinChatRoom;
 import cn.lb.service.impl.CheckUsersJoin;
 
@@ -22,6 +23,7 @@ public enum ServiceType {
 	CreateChatRoom(CreateChatRoom.class),// 创建聊天室服务
 	ApplyJoinChatRoom(ApplyJoinChatRoom.class),// 申请加入聊天室服务
 	CheckUsersJoin(CheckUsersJoin.class),// 查询是否有人申请加入聊天室
+	AgreeUserJoin(AgreeUserJoin.class),// 查询是否有人申请加入聊天室
 	CheckBeAgree(CheckBeAgree.class);// 查询是否被同意加入聊天室
 
 	
