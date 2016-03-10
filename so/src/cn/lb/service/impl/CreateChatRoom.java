@@ -11,12 +11,12 @@ import cn.lb.utils.DBUtils;
 
 /**
  * 
- * The name: 创建聊天室service What to do:
- * 
- * @author ReeseLin
- * @Email 172053362@qq.com
- * 
- * 
+ * Des:创建聊天室
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public class CreateChatRoom extends MainService {
 

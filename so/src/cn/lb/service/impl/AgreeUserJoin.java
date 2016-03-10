@@ -13,12 +13,12 @@ import cn.lb.utils.DBUtils;
 
 /**
  * 
- * The name: 新建一个用户 What to do: 根据一个传入的用户名得到一个唯一id并返回
- * 
- * @author ReeseLin
- * @Email 172053362@qq.com
- * 
- * 
+ * Des:同意用户加入聊天室
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public class AgreeUserJoin extends MainService {
 

@@ -10,15 +10,14 @@ import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
 import cn.lb.utils.DBUtils;
-
 /**
  * 
- * The name: 新建一个用户 What to do: 根据一个传入的用户名得到一个唯一id并返回
- * 
- * @author ReeseLin
- * @Email 172053362@qq.com
- * 
- * 
+ * Des:查询申请加入聊天室的用户名单
+ *
+ * @author ReeseLin 
+ * @Email  172053362@qq.com
+ *
+ *
  */
 public class CheckUsersJoin extends MainService {
 

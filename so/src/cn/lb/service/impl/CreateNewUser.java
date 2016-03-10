@@ -10,17 +10,17 @@ import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
 import cn.lb.utils.DBUtils;
+
 /**
  * 
- * The name: 新建一个用户
- * What to do: 根据一个传入的用户名得到一个唯一id并返回
+ * Des:创建一个新用户
  *
  * @author ReeseLin 
  * @Email  172053362@qq.com
  *
  *
  */
-public class GetUserID extends MainService {
+public class CreateNewUser extends MainService {
 
 	
 	public static final String SQL_INSERTUSER=" INSERT INTO USER (username) VALUES  (:username);" ;
