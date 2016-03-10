@@ -29,8 +29,8 @@ public class CheckBeAgree extends MainService {
 	@Transactional
 	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
 		// 获取到请求内容的参数 TODO 获取参数这个地方感觉有点问题
-		List<Map<Object, Object>> list = queryMsg.getDataTable();
-		Map<Object, Object> map = list.get(0);
+		List<Map<String, Object>> list = queryMsg.getDataTable();
+		Map<String, Object> map = list.get(0);
 
 		String userid = (String) map.get("userid");
 		String username = (String) map.get("chatroomid");
@@ -47,8 +47,8 @@ public class CheckBeAgree extends MainService {
 		DBUtils.executeSQL(sqlQueryMsg);
 
 		// 构建回应数据
-		List<Map<Object,Object>> resultList = new ArrayList<Map<Object,Object>>();
-		Map<Object,Object> resultMap =new HashMap<Object,Object>();
+		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+		Map<String,Object> resultMap =new HashMap<String,Object>();
 		resultMap.put("isagree", (sqlQueryMsg.getResultMsg().get(0)).get("isagree"));
 		resultList.add(resultMap);
 		

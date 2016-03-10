@@ -20,11 +20,9 @@ import cn.lb.utils.DBUtils;
  * 
  * 
  */
-public class ApplyJoinChatRoom extends MainService {
+public class CheckUsersJoin extends MainService {
 
-	public static final String SQL_USER_CHAT_ROOM = " INSERT INTO user_chat_room (userid,chatroomid) VALUES (:userid,:chatroomid);";
-
-	public static final String SQL_CHAT_ROOM_MEMBER = " INSERT INTO chat_room_member (userid,chatroomid) VALUES (:userid,:chatroomid);";
+	public static final String SQL_CHECK_USERS_JOIN = " SELECT userid,chatroomid FROM chat_room_member WHERE isagree='0' AND chatroomid IN (SELECT chatroomid FROM chat_room_member WHERE userid=:userid AND isagree='1')";
 
 	@Override
 	@Transactional
@@ -34,21 +32,13 @@ public class ApplyJoinChatRoom extends MainService {
 		Map<String, Object> map = list.get(0);
 
 		String userid = (String) map.get("userid");
-		String username = (String) map.get("chatroomid");
 
 		// 插入user操作
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userid", userid);
-		parameters.put("chatroomid", username);
-		sqlQueryMsg.setSql(SQL_USER_CHAT_ROOM);
+		sqlQueryMsg.setSql(SQL_CHECK_USERS_JOIN);
 		sqlQueryMsg.setParameters(parameters);
-
-		// 查询插入user id操作
-		SQLQueryMsg subsqlQueryMsg = new SQLQueryMsg();
-		subsqlQueryMsg.setSql(SQL_CHAT_ROOM_MEMBER);
-		subsqlQueryMsg.setParameters(parameters);
-		sqlQueryMsg.setSubsqlQueryMsg(subsqlQueryMsg);
 
 		// 执行
 		DBUtils.executeSQL(sqlQueryMsg);
@@ -57,8 +47,10 @@ public class ApplyJoinChatRoom extends MainService {
 		QueryMsg resQueryMsg = new QueryMsg();
 		resQueryMsg.setResponse(true);
 		resQueryMsg.setResult("0");
-
+		resQueryMsg.setDataTable(sqlQueryMsg.getResultMsg());
+		
 		return resQueryMsg;
+		
 	}
 
 }

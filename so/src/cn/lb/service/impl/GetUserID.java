@@ -35,8 +35,8 @@ public class GetUserID extends MainService {
 	@Transactional
 	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
 		//获取到请求内容的参数 TODO 获取参数这个地方感觉有点问题
-		List<Map<Object, Object>> list = queryMsg.getDataTable();
-		Map<Object, Object> map=list.get(0);
+		List<Map<String, Object>> list = queryMsg.getDataTable();
+		Map<String, Object> map=list.get(0);
 		
 		//插入user操作
 		SQLQueryMsg sqlQueryMsg =new SQLQueryMsg();
@@ -57,7 +57,7 @@ public class GetUserID extends MainService {
 		QueryMsg resQueryMsg = new QueryMsg();
 		Map<String, Object> resultMap =subsqlQueryMsg.getResultMsg().get(0);
 		String userid=resultMap.get(USERID)+"";
-		Map<Object, Object> resultdate = new HashMap<Object, Object>();
+		Map<String, Object> resultdate = new HashMap<String, Object>();
 		resultdate.put(USERID, userid);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();

@@ -23,7 +23,7 @@ public class QueryMsg {
 	private String Error;
 	private Date createtime;
 	private String AccessKey;
-	private List<Map<Object, Object>> DataTable;
+	private List<Map<String, Object>> DataTable;
 	private String encoding;
 
 	public QueryMsg() {
@@ -87,14 +87,14 @@ public class QueryMsg {
 	}
 
 	public void iniDateTable(){
-		DataTable = new ArrayList<Map<Object, Object>>();
+		DataTable = new ArrayList<Map<String, Object>>();
 	}
 	
-	public List<Map<Object, Object>> getDataTable() {
+	public List<Map<String, Object>> getDataTable() {
 		return DataTable;
 	}
 
-	public void setDataTable(List<Map<Object, Object>> dataTable) {
+	public void setDataTable(List<Map<String, Object>> dataTable) {
 		DataTable = dataTable;
 	}
 

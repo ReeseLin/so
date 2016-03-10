@@ -59,14 +59,14 @@ public class QueryUtils {
 				root.addElement("Error").addText(queryMsg.getError());
 			}
 			if (queryMsg.getDataTable() != null) {
-				Element DataTable = root.addElement("DataTable");
-				Map<Object, Object> dataMap = queryMsg.getDataTable().get(0);
-				for (Map.Entry<Object, Object> entry : dataMap.entrySet()) {
-					DataTable.addElement(entry.getKey() + "").addText(
-							entry.getValue() + "");
+				for(Map<String, Object> db:queryMsg.getDataTable()){
+					Element DataTable = root.addElement("DataTable");
+					for (Map.Entry<String, Object> entry : db.entrySet()) {
+						DataTable.addElement(entry.getKey() + "").addText(
+								entry.getValue() + "");
+					}
 				}
 			}
-
 		} else {
 			// TODO 如果不是回应数据的话用另外的格式，现在暂时没用到
 		}
@@ -92,7 +92,7 @@ public class QueryUtils {
 		try {
 			Node DataTable = document
 					.selectSingleNode("//DocumentElement/DataTable");
-			List<Map<Object, Object>> lm = getDateTableMsg((Element) DataTable);
+			List<Map<String, Object>> lm = getDateTableMsg((Element) DataTable);
 			queryMsg.setDataTable(lm);
 		} catch (Exception e) {
 		}
@@ -115,10 +115,10 @@ public class QueryUtils {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static List<Map<Object, Object>> getDateTableMsg(
+	private static List<Map<String, Object>> getDateTableMsg(
 			Element dateTableNode) {
-		List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
-		Map<Object, Object> map = new HashMap<Object, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		for (Iterator i = dateTableNode.elementIterator(); i.hasNext();) {
 			Element element = (Element) i.next();
 			map.put(element.getName(), element.getText());

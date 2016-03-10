@@ -31,8 +31,8 @@ public class CreateChatRoom extends MainService {
 
 	@Override
 	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
-		List<Map<Object, Object>> list = queryMsg.getDataTable();
-		Map<Object, Object> map = list.get(0);
+		List<Map<String, Object>> list = queryMsg.getDataTable();
+		Map<String, Object> map = list.get(0);
 
 		String userid = (String) map.get("userid");
 		String chatroomname = (String) map.get("chatroomname");
@@ -41,7 +41,7 @@ public class CreateChatRoom extends MainService {
 
 		// 构建回应数据
 		QueryMsg resQueryMsg = new QueryMsg();
-		Map<Object, Object> resultdate = new HashMap<Object, Object>();
+		Map<String, Object> resultdate = new HashMap<String, Object>();
 		resultdate.put("chatroomid", chatroomid);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();
