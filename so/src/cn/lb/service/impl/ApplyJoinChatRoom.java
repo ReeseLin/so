@@ -1,7 +1,6 @@
 package cn.lb.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +13,11 @@ import cn.lb.utils.DBUtils;
 /**
  * 
  * Des:申请加入聊天室
- *
- * @author ReeseLin 
- * @Email  172053362@qq.com
- *
- *
+ * 
+ * @author ReeseLin
+ * @Email 172053362@qq.com
+ * 
+ * 
  */
 public class ApplyJoinChatRoom extends MainService {
 
@@ -28,15 +27,14 @@ public class ApplyJoinChatRoom extends MainService {
 
 	@Override
 	@Transactional
-	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
-		// 获取到请求内容的参数 TODO 获取参数这个地方感觉有点问题
-		List<Map<String, Object>> list = queryMsg.getDataTable();
-		Map<String, Object> map = list.get(0);
+	public QueryMsg execute() throws Exception {
+		Map<String, Object> map = dataTable.get(0);
 
 		String userid = (String) map.get("userid");
 		String username = (String) map.get("chatroomid");
 
-		// 插入user操作
+		//TODO 判断是否房间存在？
+		
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userid", userid);

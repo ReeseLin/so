@@ -19,7 +19,7 @@ import cn.lb.service.impl.CheckUsersJoin;
  */
 public enum ServiceType {
 
-	GetUserID(CreateNewUser.class), // 获得user id服务
+	CreateNewUser(CreateNewUser.class), // 创建user服务
 	CreateChatRoom(CreateChatRoom.class),// 创建聊天室服务
 	ApplyJoinChatRoom(ApplyJoinChatRoom.class),// 申请加入聊天室服务
 	CheckUsersJoin(CheckUsersJoin.class),// 查询是否有人申请加入聊天室

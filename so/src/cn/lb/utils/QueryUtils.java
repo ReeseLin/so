@@ -50,16 +50,13 @@ public class QueryUtils {
 	public static String parseQueryMsgToXmlString(QueryMsg queryMsg)
 			throws Exception {
 		Document document = null;
-		if (queryMsg.isResponse()) {
+		if (queryMsg.isResponse() && "0".equals(queryMsg.getResult())) {
 			document = DocumentHelper.createDocument();
 			document.setXMLEncoding(queryMsg.getEncoding());
 			Element root = document.addElement("DocumentElement");
 			root.addElement("Result").addText(queryMsg.getResult());
-			if("1".equals(queryMsg.getResult())){
-				root.addElement("Error").addText(queryMsg.getError());
-			}
 			if (queryMsg.getDataTable() != null) {
-				for(Map<String, Object> db:queryMsg.getDataTable()){
+				for (Map<String, Object> db : queryMsg.getDataTable()) {
 					Element DataTable = root.addElement("DataTable");
 					for (Map.Entry<String, Object> entry : db.entrySet()) {
 						DataTable.addElement(entry.getKey() + "").addText(
@@ -68,7 +65,12 @@ public class QueryUtils {
 				}
 			}
 		} else {
-			// TODO 如果不是回应数据的话用另外的格式，现在暂时没用到
+			// 当result=1的时候，构建的返回信息
+			document = DocumentHelper.createDocument();
+			document.setXMLEncoding(queryMsg.getEncoding());
+			Element root = document.addElement("DocumentElement");
+			root.addElement("Result").addText(queryMsg.getResult());
+			root.addElement("Error").addText(queryMsg.getError());
 		}
 		return document.asXML();
 	}

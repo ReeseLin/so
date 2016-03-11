@@ -2,6 +2,8 @@ package cn.lb.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +35,14 @@ public class HttpUtils {
 			String msg = new String(buffer, 0, i,charset);
 			sb.append(msg);
 		}
+		in.close();
 		return sb.toString();
+	}
+	
+	public static void outStreamMsg(String result,OutputStream out,String charset) throws Exception {
+		OutputStreamWriter outw= new OutputStreamWriter(out, charset);
+		outw.write(result);
+		outw.close();
 	}
 
 	/**

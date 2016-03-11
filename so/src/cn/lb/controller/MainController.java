@@ -28,7 +28,7 @@ public class MainController {
 		InputStream in = request.getInputStream();
 		String receive = HttpUtils.getInputStreamMsg(in, "UTF-8");
 		QueryMsg queryMsg = QueryUtils.parseXmlStringToQueryMsg(receive);
-		System.out.println(receive);
+		//System.out.println(receive);
 		QueryMsg resultMsg = ServiceManager.execute(queryMsg);
 		responserMsg(resultMsg, response);
 	}
@@ -44,7 +44,8 @@ public class MainController {
 			throws Exception {
 		// TODO 返回信息
 		String result = QueryUtils.parseQueryMsgToXmlString(resultMsg);
-		HttpUtils.writeOutMsg(result, response);
+//		HttpUtils.writeOutMsg(result, response);
+		HttpUtils.outStreamMsg(result, response.getOutputStream(), "UTF-8");
 	}
 
 }

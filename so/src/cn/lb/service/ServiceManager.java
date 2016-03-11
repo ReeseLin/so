@@ -27,9 +27,11 @@ public class ServiceManager {
 		Class<? extends MainService> service = getSpecificService(methodName);
 		// 实例化指定类
 		MainService mservice = service.newInstance();
+		//设置参数
+		mservice.setParameter(queryMsg);
 		// 运行execute方法
-		QueryMsg resultQM = mservice.execute(queryMsg);
-
+		QueryMsg resultQM = mservice.execute();
+		
 		return resultQM;
 	}
 

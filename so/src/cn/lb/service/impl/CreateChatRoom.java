@@ -12,11 +12,11 @@ import cn.lb.utils.DBUtils;
 /**
  * 
  * Des:创建聊天室
- *
- * @author ReeseLin 
- * @Email  172053362@qq.com
- *
- *
+ * 
+ * @author ReeseLin
+ * @Email 172053362@qq.com
+ * 
+ * 
  */
 public class CreateChatRoom extends MainService {
 
@@ -30,13 +30,14 @@ public class CreateChatRoom extends MainService {
 			+ " VALUES (:chatroomid,:userid,1,1);";
 
 	@Override
-	public QueryMsg execute(QueryMsg queryMsg) throws Exception {
-		List<Map<String, Object>> list = queryMsg.getDataTable();
-		Map<String, Object> map = list.get(0);
+	public QueryMsg execute() throws Exception {
 
+		Map<String, Object> map = dataTable.get(0);
 		String userid = (String) map.get("userid");
 		String chatroomname = (String) map.get("chatroomname");
+		
 		String chatroomid = createChatRoom(userid, chatroomname);
+
 		setTwoTable(chatroomid, userid);
 
 		// 构建回应数据
@@ -51,8 +52,15 @@ public class CreateChatRoom extends MainService {
 		return resQueryMsg;
 	}
 
+	/**
+	 * 在用户聊天室表和聊天室成员表设置数据
+	 * 
+	 * @param chatroomid
+	 * @param userid
+	 * @throws Exception
+	 */
 	private void setTwoTable(String chatroomid, String userid) throws Exception {
-		// 3,在user_chat_room中把用户id和聊天室id写入并把isagree置为1
+		// 在user_chat_room中把用户id和聊天室id写入并把isagree置为1
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userid", userid);
@@ -60,7 +68,7 @@ public class CreateChatRoom extends MainService {
 		sqlQueryMsg.setSql(SQL_USER_CHAT_ROOM);
 		sqlQueryMsg.setParameters(parameters);
 
-		// 4,在chat_room_member中用户id和聊天室id写入并把isagree置为1和iscreater置为1
+		// 在chat_room_member中用户id和聊天室id写入并把isagree置为1和iscreater置为1
 		SQLQueryMsg subsqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> subparameters = new HashMap<String, Object>();
 		subparameters.put("userid", userid);
@@ -74,6 +82,14 @@ public class CreateChatRoom extends MainService {
 
 	}
 
+	/**
+	 * 创建聊天室
+	 * 
+	 * @param userid
+	 * @param chatroomname
+	 * @return
+	 * @throws Exception
+	 */
 	private String createChatRoom(String userid, String chatroomname)
 			throws Exception {
 		// 1,在chat_room表中创建一个唯一聊天室id并creater设置为用户id
