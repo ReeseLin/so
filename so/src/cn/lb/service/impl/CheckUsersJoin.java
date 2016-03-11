@@ -3,8 +3,6 @@ package cn.lb.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
@@ -24,7 +22,6 @@ public class CheckUsersJoin extends MainService {
 	public static final String SQL_CHECK_USERS_JOIN = " SELECT userid,chatroomid FROM chat_room_member WHERE isagree='0' AND chatroomid IN (SELECT chatroomid FROM chat_room_member WHERE userid=:userid AND isagree='1')";
 
 	@Override
-	@Transactional
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
 

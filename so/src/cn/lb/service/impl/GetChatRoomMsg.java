@@ -10,44 +10,49 @@ import cn.lb.utils.DBUtils;
 
 /**
  * 
- * Des:同意用户加入聊天室
+ * Des:接收消息
  * 
  * @author ReeseLin
  * @Email 172053362@qq.com
  * 
  * 
  */
-public class AgreeUserJoin extends MainService {
+public class GetChatRoomMsg extends MainService {
 
-	public static final String SQL_CHECK_ISCREATER = " SELECT iscreater FROM chat_room_member WHERE chatroomid=:chatroomid AND userid=:userid";
+	public static final String SQL_CHECK_MEMBER_ISCREATER = " SELECT isagree FROM chat_room_member WHERE chatroomid=:chatroomid AND userid=:userid;";
 
-	public static final String SQL_UPDATE_CHAT_ROOM_MEMBER = " UPDATE chat_room_member SET isagree = '1' WHERE chatroomid =:chatroomid AND userid=:friendid;";
+	public static final String SQL_GET_CHAT_ROOM_MESSAGE = "SELECT * FROM chat_room_message WHERE createtime >:lasttime AND senderid!=:userid AND chatroomid=:chatroomid;";
 
 	@Override
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
 
 		String userid = (String) map.get("userid");
-		String friendid = (String) map.get("friendid");
+		String lasttime = (String) map.get("lasttime");
 		String chatroomid = (String) map.get("chatroomid");
 
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userid", userid);
-		parameters.put("friendid", friendid);
+		parameters.put("lasttime", lasttime);
 		parameters.put("chatroomid", chatroomid);
-		sqlQueryMsg.setSql(SQL_CHECK_ISCREATER);
+		sqlQueryMsg.setSql(SQL_CHECK_MEMBER_ISCREATER);
 		sqlQueryMsg.setParameters(parameters);
 
 		// 执行
 		DBUtils.executeSQL(sqlQueryMsg);
-
-		String iscreater = (String) sqlQueryMsg.getResultMsg().get(0)
-				.get("iscreater");
+		String isagree=null;
+		if(sqlQueryMsg.getResultMsg().size()!=0){
+			 isagree = (String) sqlQueryMsg.getResultMsg().get(0)
+					.get("isagree");
+		}else{
+			return setErrorResQueryMsg();
+		}
 		
-		if ("1".equals(iscreater)) {
+		
+		if ("1".equals(isagree)) {
 			sqlQueryMsg = new SQLQueryMsg();
-			sqlQueryMsg.setSql(SQL_UPDATE_CHAT_ROOM_MEMBER);
+			sqlQueryMsg.setSql(SQL_GET_CHAT_ROOM_MESSAGE);
 			sqlQueryMsg.setParameters(parameters);
 			DBUtils.executeSQL(sqlQueryMsg);
 		}else{
@@ -58,7 +63,9 @@ public class AgreeUserJoin extends MainService {
 		QueryMsg resQueryMsg = new QueryMsg();
 		resQueryMsg.setResponse(true);
 		resQueryMsg.setResult("0");
-
+		if(sqlQueryMsg.getResultMsg()!=null){
+			resQueryMsg.setDataTable(sqlQueryMsg.getResultMsg());
+		}
 		return resQueryMsg;
 
 	}
@@ -67,7 +74,7 @@ public class AgreeUserJoin extends MainService {
 		QueryMsg resQueryMsg = new QueryMsg();
 		resQueryMsg.setResponse(true);
 		resQueryMsg.setResult("1");
-		resQueryMsg.setError("不是房间创建者");
+		resQueryMsg.setError("未加入该房间！");
 		return resQueryMsg;
 	}
 

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
@@ -31,7 +29,6 @@ public class CheckBeAgree extends MainService {
 	public static final String SQL_UPDATE_CHAT_ROOM = " UPDATE user_chat_room SET isagree='1' WHERE chatroomid=:chatroomid AND userid=:userid;";
 
 	@Override
-	@Transactional
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
 

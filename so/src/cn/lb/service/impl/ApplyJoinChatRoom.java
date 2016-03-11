@@ -3,8 +3,6 @@ package cn.lb.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
@@ -26,7 +24,6 @@ public class ApplyJoinChatRoom extends MainService {
 	public static final String SQL_CHAT_ROOM_MEMBER = " INSERT INTO chat_room_member (userid,chatroomid) VALUES (:userid,:chatroomid);";
 
 	@Override
-	@Transactional
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
 
