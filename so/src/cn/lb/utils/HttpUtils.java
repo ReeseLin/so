@@ -39,7 +39,14 @@ public class HttpUtils {
 		return sb.toString();
 	}
 	
-	public static void outStreamMsg(String result,OutputStream out,String charset) throws Exception {
+	/**
+	 * 对外写数据
+	 * @param result
+	 * @param out
+	 * @param charset编码
+	 * @throws Exception
+	 */
+	public static void writeOutMsg(String result,OutputStream out,String charset) throws Exception {
 		OutputStreamWriter outw= new OutputStreamWriter(out, charset);
 		outw.write(result);
 		outw.close();

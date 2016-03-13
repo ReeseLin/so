@@ -21,7 +21,7 @@ public class SendChatRoomMsg extends MainService {
 
 	public static final String SQL_CHECK_MEMBER_ISCREATER = " SELECT isagree FROM chat_room_member WHERE chatroomid=:chatroomid AND userid=:userid;";
 
-	public static final String SQL_UPDATE_CHAT_ROOM_MESSAGE = " INSERT INTO chat_room_message (chatroomid,message,senderid,createtime) VALUES (:chatroomid,:message,:userid, NOW());";
+	public static final String SQL_UPDATE_CHAT_ROOM_MESSAGE = " INSERT INTO chat_room_message (chatroomid,message,senderid,createtime,sendername) VALUES (:chatroomid,:message,:userid, NOW(),:sendername);";
 
 	@Override
 	public QueryMsg execute() throws Exception {
@@ -29,6 +29,7 @@ public class SendChatRoomMsg extends MainService {
 
 		String userid = (String) map.get("userid");
 		String message = (String) map.get("message");
+		String sendername = (String) map.get("username");
 		String chatroomid = (String) map.get("chatroomid");
 
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
@@ -36,6 +37,7 @@ public class SendChatRoomMsg extends MainService {
 		parameters.put("userid", userid);
 		parameters.put("message", message);
 		parameters.put("chatroomid", chatroomid);
+		parameters.put("sendername", sendername);
 		sqlQueryMsg.setSql(SQL_CHECK_MEMBER_ISCREATER);
 		sqlQueryMsg.setParameters(parameters);
 

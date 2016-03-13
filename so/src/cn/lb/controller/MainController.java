@@ -45,7 +45,7 @@ public class MainController {
 		// TODO 返回信息
 		String result = QueryUtils.parseQueryMsgToXmlString(resultMsg);
 //		HttpUtils.writeOutMsg(result, response);
-		HttpUtils.outStreamMsg(result, response.getOutputStream(), "UTF-8");
+		HttpUtils.writeOutMsg(result, response.getOutputStream(), "UTF-8");
 	}
 
 }
