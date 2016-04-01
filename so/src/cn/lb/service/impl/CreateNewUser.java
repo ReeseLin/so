@@ -28,11 +28,12 @@ public class CreateNewUser extends MainService {
 		Map<String, Object> map = dataTable.get(0);
 		String username = map.get("username") + "";
 		
+		//TODO 这里的判断好像有问题
 		if (!("".equals(username.trim()))) {
 			SQLQueryMsg sqlQueryMsg = insertUserInTable(username);
 			SQLQueryMsg subsqlQueryMsg = getUserID(sqlQueryMsg);
 			DBUtils.executeSQL(sqlQueryMsg);
-			QueryMsg resQueryMsg = setResultMsg(subsqlQueryMsg);
+			QueryMsg resQueryMsg = setResultMsg(subsqlQueryMsg,username);
 			return resQueryMsg;
 		} else {
 			return setErrorResultMsg();
@@ -53,12 +54,13 @@ public class CreateNewUser extends MainService {
 	 * @param sqlQueryMsg
 	 * @return
 	 */
-	private QueryMsg setResultMsg(SQLQueryMsg sqlQueryMsg) {
+	private QueryMsg setResultMsg(SQLQueryMsg sqlQueryMsg,String username) {
 		QueryMsg resQueryMsg = new QueryMsg();
 		Map<String, Object> resultMap = sqlQueryMsg.getResultMsg().get(0);
 		String userid = resultMap.get("userid") + "";
 		Map<String, Object> resultdate = new HashMap<String, Object>();
 		resultdate.put("userid", userid);
+		resultdate.put("username", username);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();
 		resQueryMsg.getDataTable().add(resultdate);

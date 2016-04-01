@@ -43,6 +43,8 @@ public class CreateChatRoom extends MainService {
 		// 构建回应数据
 		QueryMsg resQueryMsg = new QueryMsg();
 		Map<String, Object> resultdate = new HashMap<String, Object>();
+		resultdate.put("userid", userid);
+		resultdate.put("chatroomname", chatroomname);
 		resultdate.put("chatroomid", chatroomid);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();

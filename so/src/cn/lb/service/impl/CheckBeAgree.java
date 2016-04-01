@@ -21,8 +21,6 @@ import cn.lb.utils.DBUtils;
  */
 public class CheckBeAgree extends MainService {
 
-	// public static final String SQL_CHECK_AGREE =
-	// " SELECT isagree FROM user_chat_room WHERE userid=:userid AND chatroomid=:chatroomid;";
 
 	public static final String SQL_CHECK_AGREE = " SELECT isagree FROM chat_room_member WHERE chatroomid=:chatroomid AND userid=:userid;";
 
@@ -63,6 +61,8 @@ public class CheckBeAgree extends MainService {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("isagree", isagree);
+		resultMap.put("userid", parameters.get("userid"));
+		resultMap.put("chatroomid", parameters.get("chatroomid"));
 		resultList.add(resultMap);
 
 		QueryMsg resQueryMsg = new QueryMsg();
