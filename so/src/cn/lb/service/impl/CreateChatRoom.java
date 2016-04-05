@@ -7,6 +7,7 @@ import java.util.Map;
 import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
+import cn.lb.service.SFC;
 import cn.lb.utils.DBUtils;
 
 /**
@@ -20,7 +21,9 @@ import cn.lb.utils.DBUtils;
  */
 public class CreateChatRoom extends MainService {
 
-	public static final String SQL_OPERATOR_CHAT_ROOM = " INSERT INTO chat_room (creater,chatroomname) VALUES (:creater,:chatroomname);";
+	public static final String SQL_OPERATOR_CHAT_ROOM = " INSERT INTO chat_room (creater,chatroomname,creatername) VALUES (:creater,:chatroomname,:creatername);";
+
+	public static final String SQL_CHACK_USER_ISEXIST = "SELECT COUNT(*) AS usercount FROM USER WHERE userid=:userid AND username=:username;";
 
 	public static final String SQL_GETID = " SELECT LAST_INSERT_ID() as chatroomid;";
 
@@ -31,50 +34,82 @@ public class CreateChatRoom extends MainService {
 
 	@Override
 	public QueryMsg execute() throws Exception {
-
 		Map<String, Object> map = dataTable.get(0);
-		String userid = (String) map.get("userid");
-		String chatroomname = (String) map.get("chatroomname");
-		
-		String chatroomid = createChatRoom(userid, chatroomname);
+		String userid = (String) map.get(SFC.USERID);
+		String username = (String) map.get(SFC.USERNAME);
+		String chatroomname = (String) map.get(SFC.CHATROOMNAME);
 
-		setTwoTable(chatroomid, userid);
-
-		// 构建回应数据
 		QueryMsg resQueryMsg = new QueryMsg();
-		Map<String, Object> resultdate = new HashMap<String, Object>();
-		resultdate.put("userid", userid);
-		resultdate.put("chatroomname", chatroomname);
-		resultdate.put("chatroomid", chatroomid);
-		resQueryMsg.setResponse(true);
-		resQueryMsg.iniDateTable();
-		resQueryMsg.getDataTable().add(resultdate);
-		resQueryMsg.setResult("0");
+
+		boolean userIsExist = chackUserExist(userid, username);
+
+		if (userIsExist) {
+			String chatroomid = createChatRoom(userid, username, chatroomname);
+
+			insertUserChatRoomAndChatRoommember(chatroomid, userid);
+
+			map.put(SFC.CHATROOMID, chatroomid);
+			resQueryMsg.setResponse(true);
+			resQueryMsg.iniDateTable();
+			resQueryMsg.getDataTable().add(map);
+			resQueryMsg.setResult(SFC.RESULT_SUCCESS);
+		} else {
+			resQueryMsg.setResult(SFC.RESULT_FAIL);
+			resQueryMsg.setError("用户不存在");
+		}
 
 		return resQueryMsg;
 	}
 
 	/**
-	 * 在用户聊天室表和聊天室成员表设置数据
+	 * 查询用户是否存在
+	 * 
+	 * @param userid
+	 * @param username
+	 * @return 返回true存在，返回false则用户不存在
+	 * @throws Exception
+	 */
+	private boolean chackUserExist(String userid, String username)
+			throws Exception {
+		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(SFC.USERID, userid);
+		parameters.put(SFC.USERNAME, username);
+		sqlQueryMsg.setSql(SQL_CHACK_USER_ISEXIST);
+		sqlQueryMsg.setParameters(parameters);
+		DBUtils.executeSQL(sqlQueryMsg);
+		List<Map<String, Object>> result = sqlQueryMsg.getResultMsg();
+		Map<String, Object> map = result.get(0);
+		Long usercount = (Long) map.get(SFC.USERCOUNT);
+		if (usercount == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 在用户聊天室表和聊天室成员表
 	 * 
 	 * @param chatroomid
 	 * @param userid
 	 * @throws Exception
 	 */
-	private void setTwoTable(String chatroomid, String userid) throws Exception {
+	private void insertUserChatRoomAndChatRoommember(String chatroomid,
+			String userid) throws Exception {
+
 		// 在user_chat_room中把用户id和聊天室id写入并把isagree置为1
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("userid", userid);
-		parameters.put("chatroomid", chatroomid);
+		parameters.put(SFC.USERID, userid);
+		parameters.put(SFC.CHATROOMID, chatroomid);
 		sqlQueryMsg.setSql(SQL_USER_CHAT_ROOM);
 		sqlQueryMsg.setParameters(parameters);
 
 		// 在chat_room_member中用户id和聊天室id写入并把isagree置为1和iscreater置为1
 		SQLQueryMsg subsqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> subparameters = new HashMap<String, Object>();
-		subparameters.put("userid", userid);
-		subparameters.put("chatroomid", chatroomid);
+		subparameters.put(SFC.USERID, userid);
+		subparameters.put(SFC.CHATROOMID, chatroomid);
 		subsqlQueryMsg.setSql(SQL_CHAT_ROOM_MEMBER);
 		subsqlQueryMsg.setParameters(subparameters);
 
@@ -89,16 +124,19 @@ public class CreateChatRoom extends MainService {
 	 * 
 	 * @param userid
 	 * @param chatroomname
-	 * @return
+	 * @return 返回聊天室的ID
 	 * @throws Exception
 	 */
-	private String createChatRoom(String userid, String chatroomname)
-			throws Exception {
+	private String createChatRoom(String userid, String username,
+			String chatroomname) throws Exception {
 		// 1,在chat_room表中创建一个唯一聊天室id并creater设置为用户id
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("creater", userid);
-		parameters.put("chatroomname", chatroomname);
+
+		parameters.put(SFC.CREATER, userid);
+		parameters.put(SFC.CREATERNAME, username);
+		parameters.put(SFC.CHATROOMNAME, chatroomname);
+
 		sqlQueryMsg.setSql(SQL_OPERATOR_CHAT_ROOM);
 		sqlQueryMsg.setParameters(parameters);
 
@@ -112,6 +150,6 @@ public class CreateChatRoom extends MainService {
 		List<Map<String, Object>> resultList = subsqlQueryMsg.getResultMsg();
 		Map<String, Object> map = resultList.get(0);
 
-		return map.get("chatroomid") + "";
+		return map.get(SFC.CHATROOMID)+"";
 	}
 }

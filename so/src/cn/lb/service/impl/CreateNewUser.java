@@ -6,6 +6,7 @@ import java.util.Map;
 import cn.lb.bean.QueryMsg;
 import cn.lb.bean.SQLQueryMsg;
 import cn.lb.service.MainService;
+import cn.lb.service.SFC;
 import cn.lb.utils.DBUtils;
 
 /**
@@ -26,25 +27,21 @@ public class CreateNewUser extends MainService {
 	@Override
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
-		String username = map.get("username") + "";
+		String username = (String) map.get(SFC.USERNAME);
 		
-		//TODO 这里的判断好像有问题
+		QueryMsg resQueryMsg = new QueryMsg();
+
+		// TODO 这里的判断好像有问题,在客户端提交空的时候好像不会报错？
 		if (!("".equals(username.trim()))) {
 			SQLQueryMsg sqlQueryMsg = insertUserInTable(username);
 			SQLQueryMsg subsqlQueryMsg = getUserID(sqlQueryMsg);
 			DBUtils.executeSQL(sqlQueryMsg);
-			QueryMsg resQueryMsg = setResultMsg(subsqlQueryMsg,username);
-			return resQueryMsg;
+			setResultMsg(subsqlQueryMsg, username, resQueryMsg);
 		} else {
-			return setErrorResultMsg();
+			resQueryMsg.setResponse(true);
+			resQueryMsg.setResult(SFC.RESULT_FAIL);
+			resQueryMsg.setError("传入用户名为空 ！");
 		}
-	}
-
-	private QueryMsg setErrorResultMsg() {
-		QueryMsg resQueryMsg = new QueryMsg();
-		resQueryMsg.setResponse(true);
-		resQueryMsg.setResult("1");
-		resQueryMsg.setError("传入username为空 ！");
 		return resQueryMsg;
 	}
 
@@ -54,17 +51,17 @@ public class CreateNewUser extends MainService {
 	 * @param sqlQueryMsg
 	 * @return
 	 */
-	private QueryMsg setResultMsg(SQLQueryMsg sqlQueryMsg,String username) {
-		QueryMsg resQueryMsg = new QueryMsg();
+	private QueryMsg setResultMsg(SQLQueryMsg sqlQueryMsg, String username,
+			QueryMsg resQueryMsg) {
 		Map<String, Object> resultMap = sqlQueryMsg.getResultMsg().get(0);
-		String userid = resultMap.get("userid") + "";
+		String userid = resultMap.get(SFC.USERID) + "";
 		Map<String, Object> resultdate = new HashMap<String, Object>();
-		resultdate.put("userid", userid);
-		resultdate.put("username", username);
+		resultdate.put(SFC.USERID, userid);
+		resultdate.put(SFC.USERNAME, username);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.iniDateTable();
 		resQueryMsg.getDataTable().add(resultdate);
-		resQueryMsg.setResult("0");
+		resQueryMsg.setResult(SFC.RESULT_SUCCESS);
 		return resQueryMsg;
 	}
 
@@ -91,7 +88,7 @@ public class CreateNewUser extends MainService {
 		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		sqlQueryMsg.setSql(SQL_INSERT_USER);
-		parameters.put("username", username);
+		parameters.put(SFC.USERNAME, username);
 		sqlQueryMsg.setParameters(parameters);
 		return sqlQueryMsg;
 	}
