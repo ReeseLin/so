@@ -19,7 +19,9 @@ import cn.lb.utils.DBUtils;
  */
 public class CheckUsersJoin extends MainService {
 
-	public static final String SQL_CHECK_USERS_JOIN = " SELECT userid,chatroomid FROM chat_room_member WHERE isagree='0' AND chatroomid IN (SELECT chatroomid FROM chat_room_member WHERE userid=:userid AND isagree='1')";
+	public static final String SQL_CHECK_USERS_JOIN = " SELECT crm.userid ,crm.chatroomid ,u.username "
+			+ " FROM chat_room_member AS crm JOIN USER AS u ON crm.userid=u.userid"
+			+ " WHERE isagree='0' AND chatroomid IN (SELECT chatroomid FROM chat_room_member WHERE userid=:userid AND isagree='1');";
 
 	@Override
 	public QueryMsg execute() throws Exception {
