@@ -1,6 +1,5 @@
 package cn.lb.service.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import cn.lb.bean.QueryMsg;
@@ -26,29 +25,15 @@ public class AgreeUserJoin extends MainService {
 	@Override
 	public QueryMsg execute() throws Exception {
 		Map<String, Object> map = dataTable.get(0);
-
-		String userid = (String) map.get("userid");
-		String friendid = (String) map.get("friendid");
-		String chatroomid = (String) map.get("chatroomid");
-
-		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("userid", userid);
-		parameters.put("friendid", friendid);
-		parameters.put("chatroomid", chatroomid);
-		sqlQueryMsg.setSql(SQL_CHECK_ISCREATER);
-		sqlQueryMsg.setParameters(parameters);
-
-		// 执行
-		DBUtils.executeSQL(sqlQueryMsg);
-
-		String iscreater = (String) sqlQueryMsg.getResultMsg().get(0)
-				.get("iscreater");
 		
-		if ("1".equals(iscreater)) {
+		SQLQueryMsg sqlQueryMsg;
+		
+		boolean iscreater = chackIsCreater(map);
+
+		if (iscreater) {
 			sqlQueryMsg = new SQLQueryMsg();
 			sqlQueryMsg.setSql(SQL_UPDATE_CHAT_ROOM_MEMBER);
-			sqlQueryMsg.setParameters(parameters);
+			sqlQueryMsg.setParameters(map);
 			DBUtils.executeSQL(sqlQueryMsg);
 		}else{
 			return setErrorResQueryMsg();
@@ -56,11 +41,26 @@ public class AgreeUserJoin extends MainService {
 
 		// 构建回应数据
 		QueryMsg resQueryMsg = new QueryMsg();
+		resQueryMsg.iniDateTable();
+		resQueryMsg.getDataTable().add(map);
 		resQueryMsg.setResponse(true);
 		resQueryMsg.setResult("0");
 
 		return resQueryMsg;
 
+	}
+
+	private boolean chackIsCreater(Map<String, Object> map) throws Exception {
+		SQLQueryMsg sqlQueryMsg = new SQLQueryMsg();
+		sqlQueryMsg.setSql(SQL_CHECK_ISCREATER);
+		sqlQueryMsg.setParameters(map);
+		DBUtils.executeSQL(sqlQueryMsg);
+		String iscreater = (String) sqlQueryMsg.getResultMsg().get(0)
+				.get("iscreater");
+		if("1".equals(iscreater)){
+			return true;
+		}
+		return false;
 	}
 
 	private QueryMsg setErrorResQueryMsg() {
