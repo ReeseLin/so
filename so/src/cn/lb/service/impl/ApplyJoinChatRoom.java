@@ -59,6 +59,7 @@ public class ApplyJoinChatRoom extends MainService {
 		String chatroomid = (String) map.get("chatroomid");
 
 		// 设置sql中的参数(可共享)
+		// 设置sql中的参数(可共享)
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userid", userid);
 		parameters.put("chatroomid", chatroomid);
